@@ -17,6 +17,41 @@ class User(BaseModel):
 
 This model says: "A User has a name (string), email (string), and age (integer)."
 
+## Dataclasses vs Pydantic
+
+Python has built-in dataclasses for defining data structures:
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class User:
+    name: str
+    email: str
+    age: int
+
+user = User(name="Alice", email="alice@example.com", age="not a number")
+print(user.age)  # "not a number" - no validation!
+```
+
+Dataclasses give you a clean syntax for data containers, but they don't validate anything. The type hints are just documentation.
+
+Pydantic models look similar but actually enforce the types:
+
+```python
+from pydantic import BaseModel
+
+class User(BaseModel):
+    name: str
+    email: str
+    age: int
+
+user = User(name="Alice", email="alice@example.com", age="not a number")
+# ValidationError: Input should be a valid integer
+```
+
+Use dataclasses when you trust your data (internal code, already validated). Use Pydantic when you need validation (external APIs, user input, configuration).
+
 ## Creating instances
 
 Create a model instance by passing data to it:
@@ -263,8 +298,33 @@ print(user.nmae)  # AttributeError
 print(user.name)
 ```
 
+## Strict mode
+
+By default, Pydantic coerces compatible types (like `"25"` to `25`). If you want to disable this and require exact types, use strict mode:
+
+```python
+from pydantic import BaseModel, ConfigDict
+
+class StrictUser(BaseModel):
+    model_config = ConfigDict(strict=True)
+    
+    name: str
+    age: int
+
+# This will fail - no coercion allowed
+user = StrictUser(name="Alice", age="25")
+# ValidationError: Input should be a valid integer
+```
+
+For most use cases, the default lax mode is what you want.
+
+## Learn more
+
+- [Models documentation](https://docs.pydantic.dev/latest/concepts/models/)
+- [Dataclasses in Pydantic](https://docs.pydantic.dev/latest/concepts/dataclasses/)
+
 ## What's next?
 
 Now you know how to create basic models. Next, let's learn how to add validation rules and constraints to your fields.
 
-[Next: Validation and Fields](../4-validation-and-fields/chapter.md)
+[Next: Validation and Fields](04-validation-and-fields.md)

@@ -1,28 +1,29 @@
 # Pydantic Crash Course
 
-Type-safe Python for AI development.
+Type-safe Python development.
 
 ## What you'll learn
 
-Learn Pydantic from scratch and start building type-safe Python applications. This crash course covers the essential 80/20 of Pydantic with a focus on AI development.
+Learn Pydantic from scratch and start building type-safe Python applications. This crash course covers the essential 80/20 of Pydantic.
 
 - **Understand the problem** - Why Python's dynamic typing breaks things
 - **Type hints** - The foundation Pydantic builds on
 - **Data models** - Define and validate your data structures
 - **Configuration** - Type-safe settings from environment variables
-- **AI integration** - Get structured output from LLMs
+- **Structured output** - Parse and validate data from external APIs
 
 ## Course chapters
 
 | Chapter | Topic | Description |
 |---------|-------|-------------|
-| 1 | [Introduction](docs/1-introduction/chapter.md) | The problem Pydantic solves |
-| 2 | [Type Hints](docs/2-type-hints/chapter.md) | Python's type system basics |
-| 3 | [Your First Model](docs/3-your-first-model/chapter.md) | BaseModel fundamentals |
-| 4 | [Validation and Fields](docs/4-validation-and-fields/chapter.md) | Control what data is acceptable |
-| 5 | [Nested Models](docs/5-nested-models/chapter.md) | Handle complex data structures |
-| 6 | [Pydantic Settings](docs/6-pydantic-settings/chapter.md) | Configuration management |
-| 7 | [Structured LLM Output](docs/7-structured-llm-output/chapter.md) | AI integration with OpenAI |
+| 1 | [Introduction](docs/01-introduction.md) | The problem Pydantic solves |
+| 2 | [Type Hints](docs/02-type-hints.md) | Python's type system basics |
+| 3 | [Your First Model](docs/03-your-first-model.md) | BaseModel fundamentals |
+| 4 | [Validation and Fields](docs/04-validation-and-fields.md) | Control what data is acceptable |
+| 5 | [Nested Models](docs/05-nested-models.md) | Handle complex data structures |
+| 6 | [Pydantic Settings](docs/06-pydantic-settings.md) | Configuration management |
+| 7 | [Structured Output](docs/07-structured-llm-output.md) | Parse and validate external data |
+| 8 | [Summary](docs/08-summary.md) | Key learnings and next steps |
 
 ## Prerequisites
 
@@ -33,7 +34,7 @@ This course assumes you know basic Python:
 - Dictionaries and lists
 - Working with APIs
 
-If you need a refresher, check out the [Python for AI course](https://python.datalumina.com).
+If you need a refresher, check out the [Python course](https://python.datalumina.com).
 
 ## Getting started
 
@@ -63,11 +64,11 @@ uv sync
 uv run python main.py
 ```
 
-5. Start with [Chapter 1: Introduction](docs/1-introduction/chapter.md)
+5. Start with [Chapter 1: Introduction](docs/01-introduction.md)
 
 ## Resources
 
-- [Pydantic Documentation](https://docs.pydantic.dev)
-- [Pydantic Settings Documentation](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
-- [OpenAI Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs)
+- [Pydantic Documentation](https://docs.pydantic.dev/latest/)
+- [Pydantic Settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
+- [FastAPI](https://fastapi.tiangolo.com/)
 - [Python for AI Course](https://python.datalumina.com)

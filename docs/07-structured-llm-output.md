@@ -294,27 +294,13 @@ except ValidationError as e:
     print(f"Validation failed: {e}")
 ```
 
-## Pydantic and AI
+## Learn more
 
-Pydantic makes AI applications reliable:
+- [OpenAI Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs)
+- [Pydantic LLM integration](https://docs.pydantic.dev/latest/integrations/llms/)
 
-1. **Schema definition** - Clear, typed data structures
-2. **Automatic validation** - Catch errors immediately
-3. **Human-readable errors** - Useful for debugging and retries
-4. **IDE support** - Autocomplete and type checking
-5. **Ecosystem integration** - Works with FastAPI, LangChain, and more
+## What's next?
 
-## Summary
+You've completed all the core Pydantic concepts. The final chapter summarizes what you learned and points to next steps.
 
-You've learned the complete Pydantic workflow for AI development:
-
-1. **Type hints** - Define what data should look like
-2. **BaseModel** - Create validated data structures
-3. **Field constraints** - Control acceptable values
-4. **Nested models** - Handle complex data
-5. **Settings** - Manage configuration safely
-6. **Structured output** - Get reliable data from LLMs
-
-Pydantic is the foundation of type-safe Python for AI. Use it everywhere.
-
-[Back to course overview](../index.md)
+[Next: Summary](08-summary.md)

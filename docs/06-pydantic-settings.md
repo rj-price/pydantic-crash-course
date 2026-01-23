@@ -10,7 +10,7 @@ Environment variables are strings. Always:
 import os
 
 api_key = os.getenv("API_KEY")           # str | None
-max_tokens = os.getenv("MAX_TOKENS")     # str | None - not an int!
+max_connections = os.getenv("MAX_CONNECTIONS")  # str | None - not an int!
 debug_mode = os.getenv("DEBUG")          # str | None - not a bool!
 ```
 
@@ -41,22 +41,22 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     api_key: str
-    max_tokens: int = 1000
+    max_connections: int = 100
     debug: bool = False
 
 # Reads from environment variables automatically
 settings = Settings()
 
-print(settings.api_key)      # From API_KEY env var
-print(settings.max_tokens)   # From MAX_TOKENS or default 1000
-print(settings.debug)        # From DEBUG or default False
+print(settings.api_key)           # From API_KEY env var
+print(settings.max_connections)   # From MAX_CONNECTIONS or default 100
+print(settings.debug)             # From DEBUG or default False
 ```
 
 Set environment variables in your shell:
 
 ```bash
 export API_KEY="sk-abc123"
-export MAX_TOKENS="2000"
+export MAX_CONNECTIONS="200"
 export DEBUG="true"
 ```
 
@@ -69,7 +69,7 @@ Pydantic Settings maps field names to environment variables:
 | Field name | Environment variable |
 |------------|---------------------|
 | `api_key` | `API_KEY` |
-| `max_tokens` | `MAX_TOKENS` |
+| `max_connections` | `MAX_CONNECTIONS` |
 | `database_url` | `DATABASE_URL` |
 
 Field names are converted to uppercase for the environment variable lookup.
@@ -99,7 +99,7 @@ Store environment variables in a `.env` file:
 API_KEY=sk-abc123
 DATABASE_URL=postgresql://localhost/mydb
 DEBUG=true
-MAX_TOKENS=2000
+MAX_CONNECTIONS=200
 ```
 
 Configure your settings to read from it:
@@ -113,7 +113,7 @@ class Settings(BaseSettings):
     api_key: str
     database_url: str
     debug: bool = False
-    max_tokens: int = 1000
+    max_connections: int = 100
 
 settings = Settings()
 print(settings.api_key)  # sk-abc123
@@ -170,7 +170,7 @@ This prevents accidental logging of sensitive data.
 
 ## Real-world example
 
-A complete settings class for an AI application:
+A complete settings class for a web application:
 
 ```python
 from pydantic import SecretStr, Field
@@ -181,16 +181,16 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8"
     )
-    
+
     # API Configuration
-    openai_api_key: SecretStr
-    model_name: str = "gpt-4"
-    max_tokens: int = Field(default=1000, ge=1, le=4096)
-    temperature: float = Field(default=0.7, ge=0, le=2)
-    
+    api_key: SecretStr
+    api_base_url: str = "https://api.example.com"
+    request_timeout: int = Field(default=30, ge=1, le=300)
+
     # Database
     database_url: str
-    
+    max_connections: int = Field(default=10, ge=1, le=100)
+
     # Application
     debug: bool = False
     log_level: str = "INFO"
@@ -198,15 +198,15 @@ class Settings(BaseSettings):
 # Usage
 settings = Settings()
 
-print(f"Using model: {settings.model_name}")
-print(f"Max tokens: {settings.max_tokens}")
+print(f"API URL: {settings.api_base_url}")
+print(f"Timeout: {settings.request_timeout}s")
 print(f"Debug mode: {settings.debug}")
 ```
 
 Your `.env` file:
 
 ```
-OPENAI_API_KEY=sk-your-key-here
+API_KEY=sk-your-key-here
 DATABASE_URL=postgresql://user:pass@localhost/mydb
 DEBUG=true
 LOG_LEVEL=DEBUG
@@ -294,8 +294,13 @@ if settings.is_production:
     pass
 ```
 
+## Learn more
+
+- [Pydantic Settings documentation](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
+- [pydantic-settings on GitHub](https://github.com/pydantic/pydantic-settings)
+
 ## What's next?
 
-You now know how to manage configuration safely. In the final chapter, we'll combine everything to get structured output from LLMs.
+You now know how to manage configuration safely. In the final chapter, we'll see how Pydantic works with LLMs to get structured output.
 
-[Next: Structured LLM Output](../7-structured-llm-output/chapter.md)
+[Next: Structured LLM Output](07-structured-llm-output.md)

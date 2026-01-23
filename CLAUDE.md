@@ -5,7 +5,7 @@ This is a **crash course documentation repository**, not a codebase. The markdow
 ## What this is
 
 - Written documentation that accompanies a YouTube crash course
-- 7 chapters teaching Pydantic from basics to AI integration
+- 7 chapters teaching Pydantic from basics to structured output
 - Target audience: Python developers who know basics but haven't used type hints or data models
 - Focus: 80/20 principle (teach what's used 80% of the time)
 
@@ -30,15 +30,16 @@ Follow the style from [python.datalumina.com](https://python.datalumina.com):
 ## Structure
 
 ```
+README.md                     # Course overview (main entry point)
 docs/
-  index.md                    # Course overview
-  1-introduction/chapter.md   # Problem and installation
-  2-type-hints/chapter.md     # Type hints foundation
-  3-your-first-model/         # BaseModel basics
-  4-validation-and-fields/    # Field constraints
-  5-nested-models/            # Complex data
-  6-pydantic-settings/        # Environment variables
-  7-structured-llm-output/    # AI integration
+  01-introduction.md          # Problem and installation
+  02-type-hints.md            # Type hints foundation
+  03-your-first-model.md      # BaseModel basics
+  04-validation-and-fields.md # Field constraints
+  05-nested-models.md         # Complex data
+  06-pydantic-settings.md     # Environment variables
+  07-structured-llm-output.md # Structured output
+  08-summary.md               # Key learnings and next steps
 ```
 
 ## Commands

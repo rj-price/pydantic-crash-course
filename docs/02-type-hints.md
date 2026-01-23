@@ -79,15 +79,15 @@ For collections of data, you specify what's inside:
 
 ```python
 # List of strings
-tags: list[str] = ["python", "ai", "pydantic"]
+tags: list[str] = ["python", "pydantic", "fastapi"]
 
 # List of integers
-scores: list[int] = [85, 92, 78]
+quantities: list[int] = [1, 5, 3, 2]
 
 # Dictionary with string keys and integer values
-age_map: dict[str, int] = {"alice": 30, "bob": 25}
+word_counts: dict[str, int] = {"error": 12, "warning": 5}
 
-# Dictionary with string keys and any values
+# Dictionary with string keys and string values
 settings: dict[str, str] = {"theme": "dark", "language": "en"}
 ```
 
@@ -144,15 +144,15 @@ class Task:
 Type hints work on function parameters and return values:
 
 ```python
-def greet(name: str) -> str:
-    return f"Hello, {name}!"
+def format_price(amount: float, currency: str = "USD") -> str:
+    return f"{currency} {amount:.2f}"
 
 def calculate_total(prices: list[float], tax_rate: float) -> float:
     subtotal = sum(prices)
     return subtotal * (1 + tax_rate)
 
-def find_user(user_id: int) -> dict | None:
-    # Returns a dict if found, None if not
+def get_config(key: str) -> str | None:
+    # Returns the config value if found, None if not
     pass
 ```
 
@@ -197,8 +197,13 @@ Type hints are just hints. They don't enforce anything.
 
 This is where Pydantic comes in. Pydantic reads your type hints and actually validates data against them.
 
+## Learn more
+
+- [Python typing documentation](https://docs.python.org/3/library/typing.html)
+- [Type hints cheat sheet](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html)
+
 ## What's next?
 
 Now that you understand type hints, let's use them with Pydantic to create your first validated data model.
 
-[Next: Your First Model](../3-your-first-model/chapter.md)
+[Next: Your First Model](03-your-first-model.md)

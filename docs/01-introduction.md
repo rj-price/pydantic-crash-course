@@ -1,6 +1,6 @@
 # Introduction
 
-Pydantic Python developers.
+Data validation for Python developers.
 
 ## The problem with Python
 
@@ -46,12 +46,12 @@ Your code crashes.
 
 ## The real-world impact
 
-In AI development, you're constantly working with:
+In any application, you're constantly working with:
 
 - **API responses** - External services return whatever they want
 - **User input** - Never trust user data
-- **LLM outputs** - Language models can return unexpected formats
 - **Configuration** - Environment variables are always strings
+- **Database records** - Data can be missing or malformed
 
 Without validation, bugs hide until production. With Pydantic, they surface immediately.
 
@@ -86,16 +86,16 @@ age
 
 No more debugging mysterious runtime errors. The problem is caught at the source.
 
-## Pydantic in the AI ecosystem
+## Pydantic in the Python ecosystem
 
 Pydantic is everywhere:
 
 - **FastAPI** uses Pydantic for request/response validation
-- **LangChain** uses Pydantic for structured outputs
-- **OpenAI SDK** supports Pydantic for response parsing
-- **Most AI frameworks** rely on Pydantic under the hood
+- **Django Ninja** uses Pydantic for API schemas
+- **SQLModel** combines Pydantic with SQLAlchemy
+- **Most modern Python frameworks** rely on Pydantic under the hood
 
-Learning Pydantic isn't just about validation. It's about speaking the common language of modern Python AI development.
+Learning Pydantic is about writing reliable, type-safe Python code.
 
 ## Installation
 
@@ -135,8 +135,13 @@ Notice how:
 - `model`, `max_tokens`, and `temperature` have defaults
 - Everything is typed and validated
 
+## Learn more
+
+- [Official Pydantic documentation](https://docs.pydantic.dev/latest/)
+- [Pydantic on GitHub](https://github.com/pydantic/pydantic)
+
 ## What's next?
 
 Before diving deeper into Pydantic, you need to understand type hints. They're the foundation Pydantic builds on.
 
-[Next: Type Hints](../2-type-hints/chapter.md)
+[Next: Type Hints](02-type-hints.md)

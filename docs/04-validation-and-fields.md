@@ -193,31 +193,31 @@ Type: greater_than_equal
 
 ## Custom validators (80/20 overview)
 
-Sometimes built-in constraints aren't enough. Pydantic supports custom validators:
+Sometimes built-in constraints aren't enough. Pydantic supports custom validators for business logic:
 
 ```python
 from pydantic import BaseModel, field_validator
 
 class User(BaseModel):
-    email: str
+    username: str
     
-    @field_validator("email")
+    @field_validator("username")
     @classmethod
-    def validate_email(cls, v):
-        if "@" not in v:
-            raise ValueError("Invalid email format")
+    def validate_username(cls, v):
+        if " " in v:
+            raise ValueError("Username cannot contain spaces")
         return v.lower()  # Normalize to lowercase
 
-user = User(email="ALICE@Example.com")
-print(user.email)  # alice@example.com
+user = User(username="AliceSmith")
+print(user.username)  # alicesmith
 ```
 
 Custom validators let you:
-- Add complex validation logic
-- Transform values (like normalizing email to lowercase)
-- Validate based on business rules
+- Add business-specific validation logic
+- Transform values (like normalizing to lowercase)
+- Validate things that built-in constraints can't handle
 
-For most cases, built-in constraints are enough. Use custom validators when you need specific business logic.
+For most cases, built-in constraints and types (like `EmailStr`) are enough. Use custom validators only when you need specific business logic.
 
 ## Real-world example
 
@@ -252,8 +252,6 @@ from pydantic import BaseModel, EmailStr
 
 class User(BaseModel):
     email: EmailStr  # Built-in email validation
-
-# Install email-validator: pip install email-validator
 ```
 
 ### URL validation
@@ -274,8 +272,44 @@ class Order(BaseModel):
     items: list[str] = Field(min_length=1)  # At least one item
 ```
 
+## JSON Schema generation
+
+Pydantic can generate JSON Schema from your models. This is useful for API documentation and integration with other tools:
+
+```python
+from pydantic import BaseModel, Field
+
+class User(BaseModel):
+    name: str = Field(min_length=1, description="User's full name")
+    age: int = Field(ge=0, description="User's age in years")
+
+print(User.model_json_schema())
+```
+
+Output:
+
+```python
+{
+    'properties': {
+        'name': {'description': "User's full name", 'minLength': 1, 'type': 'string'},
+        'age': {'description': "User's age in years", 'minimum': 0, 'type': 'integer'}
+    },
+    'required': ['name', 'age'],
+    'title': 'User',
+    'type': 'object'
+}
+```
+
+FastAPI uses this to automatically generate API documentation.
+
+## Learn more
+
+- [Fields documentation](https://docs.pydantic.dev/latest/concepts/fields/)
+- [Validators documentation](https://docs.pydantic.dev/latest/concepts/validators/)
+- [JSON Schema documentation](https://docs.pydantic.dev/latest/concepts/json_schema/)
+
 ## What's next?
 
 You know how to validate individual fields. Next, let's learn how to handle complex data with nested models.
 
-[Next: Nested Models](../5-nested-models/chapter.md)
+[Next: Nested Models](05-nested-models.md)

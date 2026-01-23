@@ -13,30 +13,28 @@ Use one model as a field type in another:
 ```python
 from pydantic import BaseModel
 
-class Address(BaseModel):
-    street: str
-    city: str
-    country: str
-    postal_code: str
-
-class User(BaseModel):
+class OrderItem(BaseModel):
+    product_id: str
     name: str
-    email: str
-    address: Address  # Nested model
+    quantity: int
+    price: float
+
+class Order(BaseModel):
+    order_id: str
+    item: OrderItem  # Nested model
 
 # Create with nested data
-user = User(
-    name="Alice",
-    email="alice@example.com",
-    address=Address(
-        street="123 Main St",
-        city="Amsterdam",
-        country="Netherlands",
-        postal_code="1012 AB"
+order = Order(
+    order_id="ORD-001",
+    item=OrderItem(
+        product_id="P1",
+        name="Widget",
+        quantity=2,
+        price=29.99
     )
 )
 
-print(user.address.city)  # Amsterdam
+print(order.item.name)  # Widget
 ```
 
 ## Creating from dictionaries
@@ -46,35 +44,35 @@ The real power shows when parsing nested JSON or dictionaries:
 ```python
 from pydantic import BaseModel
 
-class Address(BaseModel):
-    street: str
-    city: str
-    country: str
-
-class User(BaseModel):
+class OrderItem(BaseModel):
+    product_id: str
     name: str
-    email: str
-    address: Address
+    quantity: int
+    price: float
+
+class Order(BaseModel):
+    order_id: str
+    item: OrderItem
 
 # Data from an API response
 data = {
-    "name": "Alice",
-    "email": "alice@example.com",
-    "address": {
-        "street": "123 Main St",
-        "city": "Amsterdam",
-        "country": "Netherlands"
+    "order_id": "ORD-001",
+    "item": {
+        "product_id": "P1",
+        "name": "Widget",
+        "quantity": 2,
+        "price": 29.99
     }
 }
 
 # Pydantic validates everything, including nested data
-user = User.model_validate(data)
+order = Order.model_validate(data)
 
-print(user.name)           # Alice
-print(user.address.city)   # Amsterdam
+print(order.order_id)     # ORD-001
+print(order.item.name)    # Widget
 ```
 
-Pydantic automatically creates the nested `Address` model from the dictionary.
+Pydantic automatically creates the nested `OrderItem` model from the dictionary.
 
 ## Lists of models
 
@@ -132,27 +130,26 @@ Make nested models optional:
 ```python
 from pydantic import BaseModel
 
-class Address(BaseModel):
-    street: str
-    city: str
-    country: str
+class Discount(BaseModel):
+    code: str
+    percent: float
 
-class User(BaseModel):
-    name: str
-    email: str
-    address: Address | None = None  # Optional nested model
+class Order(BaseModel):
+    order_id: str
+    total: float
+    discount: Discount | None = None  # Optional nested model
 
-# Works without address
-user = User(name="Alice", email="alice@example.com")
-print(user.address)  # None
+# Works without discount
+order = Order(order_id="ORD-001", total=99.99)
+print(order.discount)  # None
 
-# Works with address
-user = User(
-    name="Bob",
-    email="bob@example.com",
-    address={"street": "456 Oak Ave", "city": "Berlin", "country": "Germany"}
+# Works with discount
+order = Order(
+    order_id="ORD-002",
+    total=99.99,
+    discount={"code": "SAVE20", "percent": 20.0}
 )
-print(user.address.city)  # Berlin
+print(order.discount.code)  # SAVE20
 ```
 
 ## Deep nesting
@@ -208,46 +205,45 @@ print(order.customer.billing_address.city)  # Amsterdam
 
 ## Real-world example: API response
 
-Parsing a typical API response:
+Parsing a typical paginated API response:
 
 ```python
 from pydantic import BaseModel
 
-class Coordinates(BaseModel):
-    latitude: float
-    longitude: float
+class Product(BaseModel):
+    id: int
+    name: str
+    price: float
+    in_stock: bool
 
-class CurrentWeather(BaseModel):
-    temperature: float
-    humidity: int
-    description: str
+class Pagination(BaseModel):
+    page: int
+    per_page: int
+    total: int
 
-class WeatherResponse(BaseModel):
-    city: str
-    coordinates: Coordinates
-    current: CurrentWeather
-    forecast: list[CurrentWeather] = []
+class ProductListResponse(BaseModel):
+    products: list[Product]
+    pagination: Pagination
 
 # API response
 api_data = {
-    "city": "Paris",
-    "coordinates": {"latitude": 48.85, "longitude": 2.35},
-    "current": {
-        "temperature": 22.5,
-        "humidity": 65,
-        "description": "Partly cloudy"
-    },
-    "forecast": [
-        {"temperature": 24.0, "humidity": 60, "description": "Sunny"},
-        {"temperature": 21.0, "humidity": 70, "description": "Cloudy"}
-    ]
+    "products": [
+        {"id": 1, "name": "Widget", "price": 29.99, "in_stock": True},
+        {"id": 2, "name": "Gadget", "price": 49.99, "in_stock": False}
+    ],
+    "pagination": {
+        "page": 1,
+        "per_page": 10,
+        "total": 2
+    }
 }
 
-weather = WeatherResponse.model_validate(api_data)
+response = ProductListResponse.model_validate(api_data)
 
-print(f"Weather in {weather.city}")
-print(f"Current: {weather.current.temperature}°C, {weather.current.description}")
-print(f"Location: {weather.coordinates.latitude}, {weather.coordinates.longitude}")
+print(f"Page {response.pagination.page} of {response.pagination.total} products")
+for product in response.products:
+    status = "In stock" if product.in_stock else "Out of stock"
+    print(f"  - {product.name}: ${product.price} ({status})")
 ```
 
 ## Converting nested models
@@ -257,45 +253,43 @@ When you call `model_dump()`, nested models are converted too:
 ```python
 from pydantic import BaseModel
 
-class Address(BaseModel):
-    city: str
-    country: str
-
-class User(BaseModel):
+class OrderItem(BaseModel):
     name: str
-    address: Address
+    price: float
 
-user = User(
-    name="Alice",
-    address=Address(city="Amsterdam", country="Netherlands")
+class Order(BaseModel):
+    order_id: str
+    item: OrderItem
+
+order = Order(
+    order_id="ORD-001",
+    item=OrderItem(name="Widget", price=29.99)
 )
 
 # Converts everything to dict
-data = user.model_dump()
+data = order.model_dump()
 print(data)
-# {'name': 'Alice', 'address': {'city': 'Amsterdam', 'country': 'Netherlands'}}
+# {'order_id': 'ORD-001', 'item': {'name': 'Widget', 'price': 29.99}}
 ```
 
 ## Common patterns
 
-### Reusing address models
+### Reusing models across your codebase
 
 ```python
-class Address(BaseModel):
-    street: str
-    city: str
-    postal_code: str
-    country: str
+class Money(BaseModel):
+    amount: float
+    currency: str = "USD"
 
-class Company(BaseModel):
+class Product(BaseModel):
     name: str
-    headquarters: Address
-    billing_address: Address | None = None
+    price: Money
 
-class Person(BaseModel):
-    name: str
-    home_address: Address
-    work_address: Address | None = None
+class Invoice(BaseModel):
+    items: list[Product]
+    subtotal: Money
+    tax: Money
+    total: Money
 ```
 
 ### Self-referencing models (trees)
@@ -318,8 +312,13 @@ comment = Comment(
 )
 ```
 
+## Learn more
+
+- [Nested models documentation](https://docs.pydantic.dev/latest/concepts/models/#nested-models)
+- [Serialization documentation](https://docs.pydantic.dev/latest/concepts/serialization/)
+
 ## What's next?
 
 You can now handle complex data structures. Next, let's learn how to manage application configuration with Pydantic Settings.
 
-[Next: Pydantic Settings](../6-pydantic-settings/chapter.md)
+[Next: Pydantic Settings](06-pydantic-settings.md)
