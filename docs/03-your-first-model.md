@@ -227,6 +227,31 @@ print(user.name)  # Alice
 
 This is the pattern you'll use most often: receiving data as a dictionary (from an API, database, or file) and validating it into a model.
 
+## Models as type hints
+
+Pydantic models work as type hints in your functions. This gives you IDE autocomplete and type checking:
+
+```python
+from pydantic import BaseModel
+
+class User(BaseModel):
+    name: str
+    email: str
+
+def greet_user(user: User) -> str:
+    return f"Hello, {user.name}!"
+
+def load_user(data: dict) -> User:
+    return User.model_validate(data)
+
+# IDE knows 'user' is a User, autocomplete works
+user = load_user({"name": "Alice", "email": "alice@example.com"})
+message = greet_user(user)
+print(message)  # Hello, Alice!
+```
+
+This makes your code self-documenting. When you see `user: User` in a function signature, you know exactly what data to pass.
+
 ## Real-world example
 
 Here's a model for handling API responses:
