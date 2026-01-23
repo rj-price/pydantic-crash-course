@@ -22,7 +22,7 @@ Master the Pydantic fundamentals essential for AI development:
 
 | Chapter | Topic | Description |
 |---------|-------|-------------|
-| 1 | [Introduction](1-introduction/chapter.md) | Why Pydantic matters |
+| 1 | [Introduction](1-introduction/chapter.md) | The problem Pydantic solves |
 | 2 | [Type Hints](2-type-hints/chapter.md) | Python's type system basics |
 | 3 | [Your First Model](3-your-first-model/chapter.md) | BaseModel fundamentals |
 | 4 | [Validation and Fields](4-validation-and-fields/chapter.md) | Control what data is acceptable |
@@ -43,10 +43,28 @@ If you need a refresher, check out the [Python for AI course](https://python.dat
 
 ## Getting started
 
-Install Pydantic in your project:
+This project uses [uv](https://docs.astral.sh/uv/) for package management.
+
+Install uv (if you haven't already):
 
 ```bash
-pip install pydantic pydantic-settings
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Create environment and install dependencies:
+
+```bash
+uv sync
+```
+
+Run Python files:
+
+```bash
+uv run python main.py
 ```
 
 Ready? Let's start with why Pydantic exists.

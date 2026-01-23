@@ -294,7 +294,7 @@ except ValidationError as e:
     print(f"Validation failed: {e}")
 ```
 
-## Why Pydantic for AI?
+## Pydantic and AI
 
 Pydantic makes AI applications reliable:
 

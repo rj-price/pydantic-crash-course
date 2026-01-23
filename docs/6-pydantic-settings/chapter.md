@@ -24,11 +24,13 @@ This leads to bugs. Pydantic Settings solves this.
 
 ## Installation
 
-Install the separate pydantic-settings package:
+Pydantic Settings is a separate package. Add it to your project:
 
 ```bash
-pip install pydantic-settings
+uv add pydantic-settings
 ```
+
+If you're following this course, it's already installed via `uv sync`.
 
 ## Your first settings class
 

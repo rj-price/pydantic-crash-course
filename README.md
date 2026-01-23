@@ -16,7 +16,7 @@ Learn Pydantic from scratch and start building type-safe Python applications. Th
 
 | Chapter | Topic | Description |
 |---------|-------|-------------|
-| 1 | [Introduction](docs/1-introduction/chapter.md) | Why Pydantic matters |
+| 1 | [Introduction](docs/1-introduction/chapter.md) | The problem Pydantic solves |
 | 2 | [Type Hints](docs/2-type-hints/chapter.md) | Python's type system basics |
 | 3 | [Your First Model](docs/3-your-first-model/chapter.md) | BaseModel fundamentals |
 | 4 | [Validation and Fields](docs/4-validation-and-fields/chapter.md) | Control what data is acceptable |
@@ -37,21 +37,33 @@ If you need a refresher, check out the [Python for AI course](https://python.dat
 
 ## Getting started
 
+This project uses [uv](https://docs.astral.sh/uv/) for fast Python package management.
+
 1. Clone this repository
-2. Create a virtual environment:
+
+2. Install uv (if you haven't already):
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-3. Install dependencies:
+3. Create environment and install dependencies:
 
 ```bash
-pip install pydantic pydantic-settings openai
+uv sync
 ```
 
-4. Start with [Chapter 1: Introduction](docs/1-introduction/chapter.md)
+4. Run Python files with uv:
+
+```bash
+uv run python main.py
+```
+
+5. Start with [Chapter 1: Introduction](docs/1-introduction/chapter.md)
 
 ## Resources
 

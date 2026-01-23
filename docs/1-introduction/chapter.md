@@ -42,7 +42,7 @@ But someone sends:
 {"id": "one", "email": null, "age": "twenty-five"}
 ```
 
-Your code crashes. At 2 AM. On a Sunday.
+Your code crashes.
 
 ## The real-world impact
 
@@ -101,22 +101,14 @@ Learning Pydantic isn't just about validation. It's about speaking the common la
 
 ## Installation
 
-Install Pydantic in your project:
+Install Pydantic in your project with either `pip` or `uv`:
 
 ```bash
 pip install pydantic
 ```
 
-For configuration management (covered in Chapter 6):
-
 ```bash
-pip install pydantic-settings
-```
-
-Or install both:
-
-```bash
-pip install pydantic pydantic-settings
+uv add pydantic
 ```
 
 ## Your first model
