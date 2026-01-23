@@ -27,7 +27,7 @@ No error. Python runs this code without complaint.
 
 So why use them?
 
-## Why type hints matter
+## Benefits of type hints
 
 Type hints give you three benefits:
 

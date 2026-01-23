@@ -1,6 +1,6 @@
 # Introduction
 
-Why Pydantic matters for Python developers
+Pydantic Python developers.
 
 ## The problem with Python
 
@@ -36,17 +36,17 @@ Your API receives JSON from the outside world. You expect:
 {"id": 1, "email": "dave@example.com", "age": 25}
 ```
 
-But someone sends:
+But the API sends:
 
 ```json
-{"id": "one", "email": null, "age": "twenty-five"}
+{"id": 1, "email": null, "age": "unknown"}
 ```
 
 Your code crashes.
 
 ## The real-world impact
 
-This isn't a theoretical problem. In AI development, you're constantly working with:
+In AI development, you're constantly working with:
 
 - **API responses** - External services return whatever they want
 - **User input** - Never trust user data
@@ -71,15 +71,13 @@ class User(BaseModel):
 user = User(id=1, email="dave@example.com", age=25)
 
 # Invalid data - fails immediately with clear error
-user = User(id="one", email=None, age="twenty-five")
+user = User(id=1, email=None, age="unknown")
 ```
 
 When validation fails, you get a clear error message telling you exactly what went wrong:
 
 ```
 validation error for User
-id
-  Input should be a valid integer, unable to parse string as an integer
 email
   Input should be a valid string
 age
@@ -88,9 +86,9 @@ age
 
 No more debugging mysterious runtime errors. The problem is caught at the source.
 
-## Why Pydantic for AI?
+## Pydantic in the AI ecosystem
 
-Pydantic is everywhere in the AI ecosystem:
+Pydantic is everywhere:
 
 - **FastAPI** uses Pydantic for request/response validation
 - **LangChain** uses Pydantic for structured outputs
