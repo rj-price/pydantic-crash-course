@@ -1,6 +1,6 @@
 # Validation and Fields
 
-Control what data is acceptable
+Control what data is acceptable.
 
 ## Beyond type checking
 
@@ -122,75 +122,6 @@ class Order(BaseModel):
 
 Descriptions appear in generated JSON schemas and API documentation.
 
-## Understanding validation errors
-
-Pydantic gives you detailed, human-readable errors:
-
-```python
-from pydantic import BaseModel, Field, ValidationError
-
-class User(BaseModel):
-    name: str = Field(min_length=2)
-    age: int = Field(ge=0, le=120)
-    email: str
-
-try:
-    user = User(name="A", age=-5, email=123)
-except ValidationError as e:
-    print(e)
-```
-
-Output:
-
-```
-3 validation errors for User
-name
-  String should have at least 2 characters [type=string_too_short]
-age
-  Input should be greater than or equal to 0 [type=greater_than_equal]
-email
-  Input should be a valid string [type=string_type]
-```
-
-Each error tells you:
-- Which field failed
-- What went wrong
-- The validation type
-
-## Accessing error details
-
-You can access error details programmatically:
-
-```python
-from pydantic import BaseModel, Field, ValidationError
-
-class User(BaseModel):
-    name: str = Field(min_length=2)
-    age: int = Field(ge=0)
-
-try:
-    user = User(name="A", age=-5)
-except ValidationError as e:
-    for error in e.errors():
-        print(f"Field: {error['loc'][0]}")
-        print(f"Message: {error['msg']}")
-        print(f"Type: {error['type']}")
-        print("---")
-```
-
-Output:
-
-```
-Field: name
-Message: String should have at least 2 characters
-Type: string_too_short
----
-Field: age
-Message: Input should be greater than or equal to 0
-Type: greater_than_equal
----
-```
-
 ## Custom validators (80/20 overview)
 
 Sometimes built-in constraints aren't enough. Pydantic supports custom validators for business logic:
@@ -202,7 +133,6 @@ class User(BaseModel):
     username: str
     
     @field_validator("username")
-    @classmethod
     def validate_username(cls, v):
         if " " in v:
             raise ValueError("Username cannot contain spaces")
@@ -212,12 +142,14 @@ user = User(username="AliceSmith")
 print(user.username)  # alicesmith
 ```
 
+The validator function receives `cls` (the class, since there's no instance yet during validation) and `v` (the value being validated). Return the value to accept it, or raise `ValueError` to reject it.
+
 Custom validators let you:
 - Add business-specific validation logic
 - Transform values (like normalizing to lowercase)
 - Validate things that built-in constraints can't handle
 
-For most cases, built-in constraints and types (like `EmailStr`) are enough. Use custom validators only when you need specific business logic.
+For most cases, built-in constraints and types are enough. Use custom validators only when you need specific business logic.
 
 ## Real-world example
 

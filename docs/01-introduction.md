@@ -8,7 +8,7 @@ Python is dynamically typed. This means you can do this:
 
 ```python
 age = 25
-age = "twenty-five"
+age = "twenty-five" 
 age = ["25", 25, None]
 ```
 

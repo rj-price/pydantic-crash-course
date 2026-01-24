@@ -1,6 +1,6 @@
 # Your First Model
 
-Create validated data structures with BaseModel
+Create validated data structures with BaseModel.
 
 ## What is a model?
 
@@ -34,6 +34,8 @@ user = User(name="Alice", email="alice@example.com", age="not a number")
 print(user.age)  # "not a number" - no validation!
 ```
 
+The `@dataclass` decorator generates an `__init__` method from your type hints. Without it, you get `TypeError: User() takes no arguments` because a plain class with annotations doesn't accept constructor arguments.
+
 Dataclasses give you a clean syntax for data containers, but they don't validate anything. The type hints are just documentation.
 
 Pydantic models look similar but actually enforce the types:
@@ -50,7 +52,7 @@ user = User(name="Alice", email="alice@example.com", age="not a number")
 # ValidationError: Input should be a valid integer
 ```
 
-Use dataclasses when you trust your data (internal code, already validated). Use Pydantic when you need validation (external APIs, user input, configuration).
+For most projects, just use Pydantic. You get validation, serialization, and JSON Schema generation with minimal overhead. Pydantic v2 is fast enough that the performance difference rarely matters.
 
 ## Creating instances
 
@@ -207,7 +209,7 @@ print(json_string)
 
 ## Creating from a dictionary
 
-Use `model_validate()` to create a model from a dictionary:
+Two ways to create a model from a dictionary:
 
 ```python
 from pydantic import BaseModel
@@ -220,10 +222,14 @@ class User(BaseModel):
 # Data from an API response
 data = {"name": "Alice", "email": "alice@example.com", "age": 30}
 
-# Create model from dict
+# Option 1: Unpack the dict (simple, common)
+user = User(**data)
+
+# Option 2: Use model_validate (explicit, more options)
 user = User.model_validate(data)
-print(user.name)  # Alice
 ```
+
+Both validate the data. Use `**data` for simple cases. Use `model_validate()` when you need options like `strict=True`.
 
 This is the pattern you'll use most often: receiving data as a dictionary (from an API, database, or file) and validating it into a model.
 
@@ -297,31 +303,23 @@ class User(BaseModel):
     email: str
 ```
 
-### Using mutable default values
+### Mutable default values
+
+In regular Python classes, `= []` is dangerous because all instances share the same list. Pydantic handles this correctly and creates a new list for each instance:
 
 ```python
-# Wrong - mutable default
-class User(BaseModel):
-    tags: list[str] = []  # All instances share the same list!
-
-# Right - use default_factory
-from pydantic import Field
+from pydantic import BaseModel
 
 class User(BaseModel):
-    tags: list[str] = Field(default_factory=list)
+    tags: list[str] = []  # Safe in Pydantic - each instance gets its own list
+
+user1 = User()
+user2 = User()
+user1.tags.append("python")
+print(user2.tags)  # [] - not affected
 ```
 
-### Accessing fields that don't exist
-
-```python
-user = User(name="Alice", email="alice@example.com")
-
-# Wrong - typo in field name
-print(user.nmae)  # AttributeError
-
-# Right
-print(user.name)
-```
+You can also use `Field(default_factory=list)` if you prefer being explicit, but it's not required in Pydantic.
 
 ## Strict mode
 
@@ -341,12 +339,13 @@ user = StrictUser(name="Alice", age="25")
 # ValidationError: Input should be a valid integer
 ```
 
+`model_config` is a special attribute name that Pydantic looks for. `ConfigDict` holds configuration options for the model.
+
 For most use cases, the default lax mode is what you want.
 
 ## Learn more
 
 - [Models documentation](https://docs.pydantic.dev/latest/concepts/models/)
-- [Dataclasses in Pydantic](https://docs.pydantic.dev/latest/concepts/dataclasses/)
 
 ## What's next?
 

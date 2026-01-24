@@ -1,6 +1,6 @@
 # Nested Models
 
-Handle complex data structures
+Handle complex data structures.
 
 ## Real data is nested
 
@@ -91,10 +91,6 @@ class Order(BaseModel):
     order_id: str
     customer_email: str
     items: list[OrderItem]  # List of models
-    
-    @property
-    def total(self) -> float:
-        return sum(item.price * item.quantity for item in self.items)
 
 # From API response
 order_data = {
@@ -106,12 +102,11 @@ order_data = {
     ]
 }
 
-order = Order.model_validate(order_data)
+order = Order(**order_data)
 
 print(f"Order {order.order_id}")
 for item in order.items:
     print(f"  - {item.name}: {item.quantity} x ${item.price}")
-print(f"Total: ${order.total}")
 ```
 
 Output:
@@ -120,7 +115,6 @@ Output:
 Order ORD-001
   - Widget: 2 x $29.99
   - Gadget: 1 x $49.99
-Total: $109.97
 ```
 
 ## Optional nested models
@@ -203,49 +197,6 @@ order = Order.model_validate(data)
 print(order.customer.billing_address.city)  # Amsterdam
 ```
 
-## Real-world example: API response
-
-Parsing a typical paginated API response:
-
-```python
-from pydantic import BaseModel
-
-class Product(BaseModel):
-    id: int
-    name: str
-    price: float
-    in_stock: bool
-
-class Pagination(BaseModel):
-    page: int
-    per_page: int
-    total: int
-
-class ProductListResponse(BaseModel):
-    products: list[Product]
-    pagination: Pagination
-
-# API response
-api_data = {
-    "products": [
-        {"id": 1, "name": "Widget", "price": 29.99, "in_stock": True},
-        {"id": 2, "name": "Gadget", "price": 49.99, "in_stock": False}
-    ],
-    "pagination": {
-        "page": 1,
-        "per_page": 10,
-        "total": 2
-    }
-}
-
-response = ProductListResponse.model_validate(api_data)
-
-print(f"Page {response.pagination.page} of {response.pagination.total} products")
-for product in response.products:
-    status = "In stock" if product.in_stock else "Out of stock"
-    print(f"  - {product.name}: ${product.price} ({status})")
-```
-
 ## Converting nested models
 
 When you call `model_dump()`, nested models are converted too:
@@ -301,13 +252,13 @@ from pydantic import BaseModel
 class Comment(BaseModel):
     text: str
     author: str
-    replies: list[Comment] = []  # Comments can have replies
+    replies: list[Comment] = []
 
 comment = Comment(
     text="Great article!",
     author="Alice",
     replies=[
-        Comment(text="Thanks!", author="Bob", replies=[])
+        Comment(text="Thanks!", author="Bob")
     ]
 )
 ```

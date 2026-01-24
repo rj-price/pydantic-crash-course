@@ -1,6 +1,6 @@
 # Type Hints
 
-The foundation Pydantic builds on
+The foundation Pydantic builds on.
 
 ## What are type hints?
 
@@ -91,6 +91,8 @@ word_counts: dict[str, int] = {"error": 12, "warning": 5}
 settings: dict[str, str] = {"theme": "dark", "language": "en"}
 ```
 
+Since Python 3.9+, use lowercase built-in types (`list`, `dict`, `set`, `tuple`). Older code uses uppercase imports from `typing` (`List`, `Dict`). These are equivalent but lowercase is now preferred.
+
 ## Optional values
 
 Sometimes a value might not exist. Use `Optional` or the `|` syntax:
@@ -103,14 +105,16 @@ middle_name: Optional[str] = None
 middle_name: str | None = None
 ```
 
-Use `Optional` when a field might be `None`:
+Use `Optional` when a value might be `None`:
 
 ```python
-class User:
-    name: str                      # Required
-    email: str                     # Required
-    phone: str | None = None       # Optional, defaults to None
-    bio: Optional[str] = None      # Same thing, older syntax
+# User might not have a middle name
+middle_name: str | None = None
+middle_name: str | None = "James"
+
+# Phone number is optional
+phone: str | None = None
+phone: str | None = "+1-555-0123"
 ```
 
 ## Literal types
@@ -133,10 +137,9 @@ Real-world example:
 ```python
 from typing import Literal
 
-class Task:
-    title: str
-    priority: Literal["low", "medium", "high"]
-    status: Literal["todo", "in_progress", "done"]
+log_level: Literal["debug", "info", "warning", "error"] = "info"
+priority: Literal["low", "medium", "high"] = "medium"
+status: Literal["pending", "approved", "rejected"] = "pending"
 ```
 
 ## Function type hints

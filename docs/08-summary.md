@@ -1,6 +1,6 @@
 # Summary
 
-Key learnings and next steps
+Key learnings and next steps.
 
 ## What you learned
 

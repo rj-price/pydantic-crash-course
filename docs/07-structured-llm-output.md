@@ -1,6 +1,6 @@
 # Structured LLM Output
 
-Get type-safe responses from AI models
+Get type-safe responses from AI models.
 
 ## The problem with LLM responses
 
@@ -33,6 +33,9 @@ OpenAI's API directly supports Pydantic models for structured output:
 ```python
 from openai import OpenAI
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class ProductInfo(BaseModel):
     name: str
@@ -78,20 +81,28 @@ Descriptions help the LLM understand what to extract.
 Handle nested and list data:
 
 ```python
-from pydantic import BaseModel, Field
+from datetime import datetime
+from pydantic import BaseModel
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class ActionItem(BaseModel):
     task: str
     assignee: str | None = None
-    due_date: str | None = None
+    due_date: datetime | None = None
+
 
 class MeetingNotes(BaseModel):
     title: str
-    date: str
+    date: datetime
     attendees: list[str]
     summary: str
     action_items: list[ActionItem]
-    next_meeting: str | None = None
+    next_meeting: datetime | None = None
+
 
 # Use with OpenAI
 client = OpenAI()
@@ -106,88 +117,16 @@ response = client.responses.parse(
     We discussed the roadmap. Alice will prepare the budget by Friday.
     Bob is handling the technical specs. Next sync on January 22.
     """,
-    text_format=MeetingNotes
+    text_format=MeetingNotes,
 )
 
 notes = response.output_parsed
 print(f"Meeting: {notes.title}")
+print(f"Date: {notes.date}")
 print(f"Attendees: {', '.join(notes.attendees)}")
 for item in notes.action_items:
     print(f"  - {item.task} ({item.assignee})")
 ```
-
-## Handling validation errors
-
-LLMs can sometimes return unexpected data. Handle validation gracefully:
-
-```python
-from openai import OpenAI
-from pydantic import BaseModel, ValidationError
-
-class Product(BaseModel):
-    name: str
-    price: float
-    category: str
-
-client = OpenAI()
-
-try:
-    response = client.responses.parse(
-        model="gpt-4o",
-        input="Extract product info from: Check out our new widget!",
-        text_format=Product
-    )
-    product = response.output_parsed
-    print(f"Got: {product.name}")
-except ValidationError as e:
-    print("Could not parse response:")
-    for error in e.errors():
-        print(f"  - {error['loc']}: {error['msg']}")
-```
-
-## Retry with validation feedback
-
-Pydantic's human-readable errors make retries effective:
-
-```python
-from openai import OpenAI
-from pydantic import BaseModel, ValidationError, Field
-
-class Product(BaseModel):
-    name: str = Field(min_length=1)
-    price: float = Field(gt=0)
-    category: str
-
-def extract_product(text: str, max_retries: int = 3) -> Product | None:
-    client = OpenAI()
-    
-    for attempt in range(max_retries):
-        try:
-            response = client.responses.parse(
-                model="gpt-4o",
-                input=f"Extract product info: {text}",
-                text_format=Product
-            )
-            return response.output_parsed
-        except ValidationError as e:
-            if attempt < max_retries - 1:
-                # Include error in next attempt
-                error_msg = str(e)
-                text = f"{text}\n\nPrevious attempt failed: {error_msg}\nPlease fix these issues."
-            else:
-                return None
-    
-    return None
-
-# Usage
-product = extract_product("New laptop, $999, Electronics")
-if product:
-    print(f"Extracted: {product.name}")
-else:
-    print("Failed to extract product info")
-```
-
-The human-readable error messages help the model understand what went wrong.
 
 ## Using Literal for constrained outputs
 
@@ -217,15 +156,21 @@ Extract structured data from unstructured invoice text:
 ```python
 from pydantic import BaseModel, Field
 from typing import Literal
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class LineItem(BaseModel):
     description: str
     quantity: int = Field(ge=1)
     unit_price: float = Field(ge=0)
-    
+
     @property
     def total(self) -> float:
         return self.quantity * self.unit_price
+
 
 class Invoice(BaseModel):
     invoice_number: str
@@ -237,6 +182,7 @@ class Invoice(BaseModel):
     tax: float | None = None
     total: float
     payment_status: Literal["paid", "pending", "overdue"] = "pending"
+
 
 # Extract from invoice text
 invoice_text = """
@@ -257,9 +203,7 @@ Status: Paid
 
 client = OpenAI()
 response = client.responses.parse(
-    model="gpt-4o",
-    input=f"Extract invoice data:\n{invoice_text}",
-    text_format=Invoice
+    model="gpt-4o", input=f"Extract invoice data:\n{invoice_text}", text_format=Invoice
 )
 
 invoice = response.output_parsed
@@ -297,7 +241,7 @@ except ValidationError as e:
 ## Learn more
 
 - [OpenAI Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs)
-- [Pydantic LLM integration](https://docs.pydantic.dev/latest/integrations/llms/)
+- [Anthropic Structured Outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
 
 ## What's next?
 
