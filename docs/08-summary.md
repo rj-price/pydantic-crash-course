@@ -71,27 +71,22 @@ user = User.model_validate({"name": "Bob", "email": "bob@example.com"})
 
 ## Next steps
 
-**Practice:**
+**Practice on your own:**
 - Add Pydantic models to an existing project
 - Replace raw dictionaries with validated models
 - Use `pydantic-settings` for your configuration
 
-**Learn more:**
-- [Pydantic documentation](https://docs.pydantic.dev/latest/)
-- [FastAPI tutorial](https://fastapi.tiangolo.com/tutorial/)
-- [Pydantic AI](https://ai.pydantic.dev/) for AI agent development
+## Build production AI systems
 
-**Topics to explore:**
-- Custom validators with `@field_validator`
-- Computed fields with `@computed_field`
-- Generic models for reusable patterns
-- Serialization customization
+Pydantic is one piece of the puzzle. If you want to learn how to build complete AI systems, check out the [GenAI Accelerator](https://academy.datalumina.com/accelerator).
+
+It's a 6-week program that covers everything from Pydantic and FastAPI to RAG pipelines, LLM monitoring, and deployment.
 
 ## Resources
 
 - [Pydantic Documentation](https://docs.pydantic.dev/latest/)
 - [Pydantic Settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
 - [FastAPI](https://fastapi.tiangolo.com/)
-- [Python for AI Course](https://python.datalumina.com)
+- [Python for AI](https://python.datalumina.com)
 
 [Back to course overview](../README.md)
