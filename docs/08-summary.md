@@ -86,7 +86,6 @@ It's a 6-week program that covers everything from Pydantic and FastAPI to RAG pi
 
 - [Pydantic Documentation](https://docs.pydantic.dev/latest/)
 - [Pydantic Settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
-- [FastAPI](https://fastapi.tiangolo.com/)
 - [Python for AI](https://python.datalumina.com)
 
 [Back to course overview](../README.md)

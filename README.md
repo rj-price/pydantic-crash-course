@@ -70,5 +70,4 @@ uv run python main.py
 
 - [Pydantic Documentation](https://docs.pydantic.dev/latest/)
 - [Pydantic Settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
-- [FastAPI](https://fastapi.tiangolo.com/)
 - [Python for AI Course](https://python.datalumina.com)
