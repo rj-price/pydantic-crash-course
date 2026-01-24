@@ -1,6 +1,6 @@
 # Introduction
 
-Data validation for Python developers.
+Pydantic brings runtime data validation to Python using type hints.
 
 ## The problem with Python
 
@@ -77,14 +77,14 @@ user = User(id=1, email=None, age="unknown")
 When validation fails, you get a clear error message telling you exactly what went wrong:
 
 ```
-validation error for User
+2 validation errors for User
 email
   Input should be a valid string
 age
   Input should be a valid integer, unable to parse string as an integer
 ```
 
-No more debugging mysterious runtime errors. The problem is caught at the source.
+The problem is caught at the source.
 
 ## Pydantic in the Python ecosystem
 
@@ -109,31 +109,14 @@ pip install pydantic
 uv add pydantic
 ```
 
-## Your first model
+## Why learn Pydantic
 
-Here's a taste of what you'll build. A simple model for an API configuration:
+Next to Python basics, Pydantic is one of the most important libraries to learn. Especially in the era of agentic coding.
 
-```python
-from pydantic import BaseModel
-
-class APIConfig(BaseModel):
-    api_key: str
-    model: str = "gpt-4"
-    max_tokens: int = 1000
-    temperature: float = 0.7
-
-# Create a config
-config = APIConfig(api_key="sk-abc123")
-
-print(config.model)        # gpt-4
-print(config.max_tokens)   # 1000
-print(config.api_key)      # sk-abc123
-```
-
-Notice how:
-- `api_key` is required (no default value)
-- `model`, `max_tokens`, and `temperature` have defaults
-- Everything is typed and validated
+- **More robust applications**: Strict Pydantic models catch bugs before they reach production. You define what valid data looks like, and Pydantic enforces it at runtime.
+- **AI agents understand your code better**: When you define clear Pydantic models, AI coding assistants can understand your data structures. Models act as guardrails that guide both humans and AI.
+- **Required for agentic systems**: Building AI agents that call tools, process data, or interact with APIs? You need structured output. Pydantic models define what the AI should return, making agent responses predictable and type-safe.
+- **You'll encounter it everywhere**: If you're interested in Python for AI, you'll run into Pydantic constantly. FastAPI, LangChain, OpenAI SDKs, and most AI frameworks use Pydantic under the hood.
 
 ## Learn more
 
