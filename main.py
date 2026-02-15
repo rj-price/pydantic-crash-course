@@ -8,7 +8,11 @@ class User(BaseModel):
 
 
 def main():
-    user = User(name="Alice", email="alice@example.com", age=30)
+    try:
+        user = User(name="Alice", email="alice@example.com", age=30)
+    except Exception as e:
+        print(f"Error creating user: {e}")
+        return
     print(f"User: {user.name}")
     print(f"Email: {user.email}")
     print(f"Age: {user.age}")
